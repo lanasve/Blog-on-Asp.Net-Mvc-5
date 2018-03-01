@@ -1,0 +1,133 @@
+﻿@model Snyggerik.Models.SuperPosts
+
+@{
+    ViewBag.Title = "Search posts";
+    string search = "";
+
+}
+@*Get search*@
+
+
+@foreach (var item in Model.SearchTags)
+{
+    search += item.TagId.ToString() + ",";
+}
+<div class="container body-content">
+    <h2>Search posts</h2>
+
+    <form action="FilterPosts" method="post">
+        <input type="hidden" id="filter" name="filter" value="@search" />
+
+        <button class="btn btn-primary" id="searchbutton" type="submit"></button>
+    </form>
+    <h3><font color="yellow">Tags</font></h3>
+    @foreach (var T in Model.AllTags)
+    {
+        @*<div class="col-md-offset-2 col-md-10">*@
+        <input class="tags" type="checkbox" onclick="MakeTagList()" id="@T.TagId" /><font color="yellow"> @T.Name</font>
+
+
+    }
+    <br /><br />
+
+
+
+
+
+
+
+    <table class="table">
+        <tr>
+            <th>
+                Title
+            </th>
+            <th>
+                Text
+            </th>
+            <th>
+                Created
+            </th>
+            <th>
+                Views
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.Posts)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.PostTitle, "Show", new { id = item.IdPost })
+                    @*@Html.DisplayFor(modelItem => item.PostTitle)*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PostBody)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PostCreated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Views)
+                </td>
+                <td>
+                    @*@Html.ActionLink("Edit", "Edit", new { id = item.IdPost }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.IdPost }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.IdPost })*@
+                </td>
+            </tr>
+        }
+
+    </table>
+
+    <div>
+        @Html.ActionLink("Back to My Blogs List", "MyBlogs", "Blogs")
+        ||
+        @Html.ActionLink("Back to My Posts List", "MyPosts", "Posts")
+    </div>
+
+    <script>
+
+       
+
+        function MakeTagList() {
+            //empty
+            document.getElementById('filter').value = "";
+            //create new list
+            var boxes = document.getElementsByClassName("tags");
+
+            var count = boxes.length;
+            var tagString = "";
+            //alert(count);
+            for (var i = 0; i < count; i++) {
+                if (boxes[i].checked) {
+                    tagString += boxes[i].id + ",";
+                }
+            }
+            //alert("tagstring is " + tagstring);
+            document.getElementById('filter').value = tagString;
+            document.getElementById("searchbutton").click();
+
+        }
+
+
+
+        //Checkboxes
+        var str = document.getElementById("filter").value;
+        if (str.length) {
+            
+            str = str.substring(0, str.length - 1);
+            var arr = str.split(",");
+            for (i = 0; i < arr.length; i++) {
+                //alert(arr[i]);
+                var box = document.getElementById(arr[i]);
+                if(box!=null){
+                    box.checked = true;
+                }
+            }
+        }
+
+        
+        $('#searchbutton').hide();
+       
+    </script>
+</div>

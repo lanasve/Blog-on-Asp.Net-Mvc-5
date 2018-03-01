@@ -1,0 +1,72 @@
+﻿@model Snyggerik.Models.Blog
+
+@{
+    ViewBag.Title = "Show";
+}
+<div class="container body-content">
+    <h2>@Model.BlogTitle</h2>
+
+
+    <table class="table">
+        @foreach (var item in Model.Posts)
+        {
+
+            <tr>
+                <td><label>@Html.DisplayFor(modelItem => item.PostTitle) Created   @Html.DisplayFor(modelItem => item.PostCreated)</label> (@Html.DisplayFor(modelItem => item.Views) views)</td>
+            </tr>
+            <tr>
+                @{ string prev = item.PostBody;
+                if (prev.Length > 300)
+                {
+                    prev = prev.Substring(0, 300);
+                }
+                }
+                <td>@prev @Html.ActionLink("Read entire post", "Show", "Posts", new { id = item.IdPost }, null)</td>
+
+            </tr>
+                    foreach (var comment in item.Comments)
+                    {
+                        <tr>
+                            @if (User.Identity.Name == comment.User.UserName)
+                            {
+                            <td class="comment">@comment.CommentBody  [posted @comment.CommentCreated by @comment.User.UserName] @Html.ActionLink("Remove","Delete","Comments", new { id = comment.CommentId },null)</td>
+                            }
+                            else
+                            {
+                                <td class="comment">@comment.CommentBody  [posted @comment.CommentCreated by @comment.User.UserName]</td>
+
+                            }
+                        </tr>
+
+                    }
+                    <tr></tr>
+                    <tr>
+                        <td>
+                            @if (User.Identity.IsAuthenticated == true)
+                {
+                                <button class="btn btn-primary" type="button" onclick="ShowForm(@item.IdPost)">Add a comment</button>
+
+                            }
+                            <div id="@item.IdPost" hidden>
+                                @using (Html.BeginForm("AddComment", "Comments", FormMethod.Post))
+                                {
+                                    <input type="hidden" id="id" name="id" value="@item.IdPost" />
+                                    <textarea class="comment" cols="20" id="body" name="body" rows="2"></textarea>
+                                    <br />
+
+                                    <button class="btn btn-success" type="submit">Save comment</button>
+
+                                }
+                            </div>
+                        </td>
+                    </tr>
+
+
+                    }
+    </table>
+</div>
+<script>
+    function ShowForm(id) {
+        document.getElementById(id).hidden = !document.getElementById(id).hidden;
+    }
+</script>

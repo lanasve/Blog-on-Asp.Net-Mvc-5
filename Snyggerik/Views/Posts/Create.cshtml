@@ -1,0 +1,64 @@
+﻿@model Snyggerik.Models.Post
+
+@{
+    ViewBag.Title = "Create";
+    ViewBag.blogId = Model.Blog.BlogId;
+}
+<div class="container body-content">
+    <h2>Create your new post</h2>
+
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4>Post</h4>
+            <input type="hidden" name="blogId" id="blogId" value="@Model.Blog.BlogId" />
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.PostTitle, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.PostTitle, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.PostTitle, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            @*Html.EditorFor(model => model.Blog.BlogId, new { htmlAttributes = new {@value= "@Model.Blog.BlogId", @class = "form-control" } })*@
+            <div class="form-group">
+                @Html.LabelFor(model => model.PostBody, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.PostBody, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.PostBody, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <input type="hidden" name="PostCreated" id="PostCreated" value="@DateTime.Now" />
+
+
+            @*<div class="form-group">
+                    @Html.LabelFor(model => model.Views, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Views, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Views, "", new { @class = "text-danger" })
+                    </div>
+                </div>*@
+
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-success" />
+                </div>
+            </div>
+        </div>
+    }
+
+    <div>
+        @Html.ActionLink("Back to My Blogs List", "MyBlogs", "Blogs")
+        ||
+        @Html.ActionLink("Back to My Posts List", "MyPosts", "Posts")
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+</div>
